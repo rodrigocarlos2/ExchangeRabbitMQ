@@ -21,20 +21,6 @@ ARGV.each do |severity|
   
   q.bind(x, :routing_key => severity)
 
-  if severity.include? " "
-
-  	isArray = 1
-
-  	array = Array.new
-
-  	array = severity.split(/ /)
-
-  	array.size.times do |item|
-  		puts array[item]
-  	end
-
-  end
-
 end
 
 puts "[*] Waiting for logs. To exit press CTRL+C"
@@ -48,10 +34,24 @@ begin
   q.subscribe(:block => true) do |delivery_info, properties, body|
 
 	      if severity=="#" or severity==delivery_info.routing_key
+
 	        	puts " [#{i}] - #{body}"
+
+            conn2 = Bunny.new(:host => "10.180.40.116")
+            conn2.start
+
+            ch2  = conn2.create_channel
+            x2  = ch2.topic("topic_logs")
+            severity = ARGV.shift || severity
+            msg2 = ARGV.empty? ? "Hello World!" : ARGV.join(" ")
+
+            x2.publish(body, :routing_key => severity)
+
+            conn2.close
+
 	      end
 
-      	  i = i+1
+      	i = i+1
 
   end
   
