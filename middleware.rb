@@ -37,7 +37,16 @@ begin
 
 	        	puts " [#{i}] - #{body}"
 
-            conn2 = Bunny.new(:host => "10.180.40.116")
+            if delivery_info.routing_key=="Picos"
+
+              conn2 = Bunny.new(:host => "10.180.40.116")
+
+            elsif delivery_info.routing_key=="Teresina"
+
+              conn2 = Bunny.new(:host => "10.180.41.85")
+
+            end
+
             conn2.start
 
             ch2  = conn2.create_channel
