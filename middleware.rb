@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 require "bunny"
-require 'pp'
 
 if ARGV.empty?
   abort "Usage: #{$0} [binding key]"
@@ -39,11 +38,15 @@ begin
 
             if delivery_info.routing_key=="Picos"
 
-              conn2 = Bunny.new(:host => "10.180.40.116")
+              conn2 = Bunny.new(:host => "10.180.41.85")
+
+              # Connection with Picos
 
             elsif delivery_info.routing_key=="Teresina"
 
-              conn2 = Bunny.new(:host => "10.180.41.85")
+              conn2 = Bunny.new(:host => "10.180.42.196")
+
+              # Connection with Teresina
 
             end
 
@@ -54,7 +57,7 @@ begin
             severity = ARGV.shift || severity
             msg2 = ARGV.empty? ? "Hello World!" : ARGV.join(" ")
 
-            x2.publish(body, :routing_key => severity)
+            x2.publish(body, :routing_key => delivery_info.routing_key)
 
             conn2.close
 
